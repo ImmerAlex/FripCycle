@@ -281,13 +281,12 @@ VALUES
     (14, 2, '8901234567'),
     (15, 3, '9012345678');
 
-INSERT INTO
-    acheter (
-        client_id,
-        type_vetement_id,
-        quantiter_achat,
-        date_heure_achat
-    )
+INSERT INTO acheter (
+    client_id,
+    type_vetement_id,
+    quantiter_achat,
+    date_heure_achat
+)
 VALUES
     (4, 5, 10, '2023-11-15 14:45:00'),
     (1, 6, 5, '2023-11-15 16:00:00'),
@@ -303,7 +302,21 @@ VALUES
     (12, 1, 3, '2023-11-16 17:30:00'),
     (13, 2, 6, '2023-11-16 19:15:00'),
     (14, 3, 4, '2023-11-16 21:00:00'),
-    (15, 4, 7, '2023-11-16 22:30:00');
+    (15, 4, 7, '2023-11-16 22:30:00'),
+    (4, 6, 7, '2023-11-18 11:00:00'),
+    (4, 6, 5, '2023-11-20 13:45:00'),
+    (5, 3, 4, '2023-11-19 10:30:00'),
+    (5, 3, 6, '2023-11-22 17:15:00'),
+    (6, 7, 8, '2023-11-23 09:00:00'),
+    (7, 5, 5, '2023-11-24 10:30:00'),
+    (8, 1, 3, '2023-11-25 12:00:00'),
+    (9, 2, 7, '2023-11-26 14:15:00'),
+    (10, 8, 4, '2023-11-27 16:30:00'),
+    (11, 3, 6, '2023-11-28 18:45:00'),
+    (12, 6, 2, '2023-11-29 20:00:00'),
+    (13, 7, 9, '2023-11-30 09:30:00'),
+    (14, 4, 5, '2023-12-01 11:45:00'),
+    (15, 5, 3, '2023-12-02 13:00:00');
 
 INSERT INTO
     deposer (
@@ -435,81 +448,3 @@ VALUES
     (13, 13),
     (14, 14),
     (15, 15);
-
-
-
-
-SELECT
-    *
-FROM
-    Client;
-
-SELECT
-    *
-FROM
-    Categorie_client;
-
-SELECT
-    *
-FROM
-    Type_telephone;
-
-SELECT
-    *
-FROM
-    Type_vetement;
-
-SELECT
-    c.client_id,
-    c.nom_client,
-    cc.*
-FROM
-    Client c
-    JOIN Categorie_client cc ON c.categorie_id = cc.categorie_id;
-
-SELECT
-    c.nom_client,
-    t.libelle_type_telephone as type_telephone,
-    p.numero_telephone
-FROM
-    possede p
-    JOIN Type_telephone t ON p.id_type_telephone = t.id_type_telephone
-    JOIN Client c on p.client_id = c.client_id;
-
-SELECT
-    c.nom_client,
-    tv.libelle,
-    tv.prix_kg,
-    a.quantiter_achat,
-    SUM(tv.prix_kg * a.quantiter_achat) as prix_totale
-FROM
-    acheter a
-    JOIN Client c ON a.client_id = c.client_id
-    JOIN Type_vetement tv ON a.type_vetement_id = tv.type_vetement_id
-GROUP BY
-    c.nom_client,
-    tv.libelle,
-    tv.prix_kg,
-    a.quantiter_achat;
-
-SELECT v.deplacement_id, c.adresse_conteneur, c.distance_magasin, d.imatriculation_camionette
-FROM visite v
-JOIN Conteneur c on v.conteneur_id = c.conteneur_id
-JOIN Deplacement d on v.deplacement_id = d.deplacement_id;
-
-SELECT c.conteneur_id, MIN(c.distance_magasin) as distance_minimal FROM Conteneur c;
-
-SELECT c.conteneur_id, MAX(c.distance_magasin) as distance_maximal FROM Conteneur c;
-
-SELECT
-    c.client_id,
-    c.nom_client,
-    SUM(tv.prix_kg * a.quantiter_achat) as total_all_time
-FROM
-    acheter a
-    JOIN Client c ON a.client_id = c.client_id
-    JOIN Type_vetement tv ON a.type_vetement_id = tv.type_vetement_id
-GROUP BY
-    c.client_id
-ORDER BY SUM(tv.prix_kg * a.quantiter_achat) DESC;
-

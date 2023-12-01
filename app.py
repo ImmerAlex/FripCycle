@@ -6,10 +6,10 @@ app = Flask(__name__)
 def get_db():
     if 'db' not in g:
         g.db =  pymysql.connect(
-            host="localhost",
-            user="root",    
-            password="",
-            database="FripCycle",
+            host="serveurmysql",
+            user="aimmer",    
+            password="1608",
+            database="BDD_aimmer",
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -44,11 +44,11 @@ def show_client():
     cursor = get_db().cursor()
     sql = '''SELECT c.client_id, c.nom_client, c.adresse_client, c.email_client, c.categorie_id, cc.categorie_id, cc.libelle as categorie_client
             FROM Client c
-            JOIN categorie_client cc ON c.categorie_id = cc.categorie_id'''
+            JOIN Categorie_client cc ON c.categorie_id = cc.categorie_id'''
     cursor.execute(sql)
     clients = cursor.fetchall()
     
-    sql = '''SELECT COUNT(c.client_id) as nbr FROM client c;'''
+    sql = '''SELECT COUNT(c.client_id) as nbr FROM Client c;'''
     cursor.execute(sql)
     nbr_client = cursor.fetchone()
     
