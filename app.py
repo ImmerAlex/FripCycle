@@ -6,9 +6,9 @@ app = Flask(__name__)
 def get_db():
     if 'db' not in g:
         g.db =  pymysql.connect(
-            host="serveurmysql",
-            user="aimmer",    
-            password="1608",
+            host="localhost",
+            user="root",    
+            password="",
             database="BDD_aimmer",
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor

@@ -85,11 +85,12 @@ CREATE TABLE possede (
 );
 
 CREATE TABLE acheter (
+    achat_id int AUTO_INCREMENT,
     client_id INT,
     type_vetement_id INT,
     quantiter_achat DECIMAL(7, 2),
     date_heure_achat DATETIME,
-    PRIMARY KEY (client_id, type_vetement_id),
+    PRIMARY KEY (achat_id),
     FOREIGN KEY (client_id) REFERENCES Client (client_id),
     FOREIGN KEY (type_vetement_id) REFERENCES Type_vetement (type_vetement_id)
 );
