@@ -1,0 +1,22 @@
+.container-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 300px);
+    justify-content: center;
+    gap: 10px;
+    padding: 0 30px;
+    margin-top: 50px;
+}
+
+.item {
+    margin-bottom: 15px;
+}
+
+.item img {
+    width: 100%;
+    aspect-ratio: 1;
+}
+
+.item p span {
+    font-size: 20px;
+    font-weight: bold;
+}

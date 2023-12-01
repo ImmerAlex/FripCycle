@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 50px;
+    border-bottom: 1px solid black;
+}
+
+nav a:not(nav .container-nav-item a) {
+    font-family: 'Pacifico', cursive;
+    font-size: 35px;
+}
+
+nav .container-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 2em;
+}
+
+.burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.burger div {
+    width: 30px;
+    height: 2px;
+    background-color: black;
+}
+
+#close-nav {
+    display: none;
+}
+
+
+@media (max-width: 800px) {
+    .burger {
+        display: flex;
+    }
+
+    nav .container-nav-item {
+        display: none;
+    }
+
+    .burger.active + .container-nav-item {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100vh;
+        background-color: black;
+    }
+
+    nav .container-nav-item #close-nav {
+        position: absolute;
+        top: 25px;
+        right: 55px;
+        display: block;
+        color: white;
+        font-size: 25px;
+        cursor: pointer;
+    }
+
+    nav .container-nav-item .item-nav {
+        color: white;
+        font-size: 30px;
+    }
+}

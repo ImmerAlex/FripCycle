@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/card.css') }}">
+    <title>FripCycle</title>
+</head>
+
+<body>
+
+    {% include('nav.html') %}
+
+
+
+    <div class="banner">
+        <h1>FripCycle</h1>
+        <img src="https://static.vecteezy.com/ti/vecteur-libre/p1/2997531-un-autocollant-modele-de-porte-vetements-avec-beaucoup-de-vetements-sur-cintres-gratuit-vectoriel.jpg"
+            alt="">
+    </div>
+
+    <div class="container-card">
+        {% for dico in type %}
+        <div class="item">
+            <img src="../static/images/type_vetement/{{ dico.libelle }}.png" alt="Image {{ dico.libelle }}">
+            <p><span>Nom :</span> {{ dico.libelle }}</p>
+            <p><span>Prix :</span> {{ dico.prix_kg }}€/kg</p>
+        </div>
+        {% endfor %}
+    </div>
+
+
+
+
+
+    <script src="{{ url_for('static', filename='javaScript/nav.js') }}"></script>
+</body>
+
+</html>
