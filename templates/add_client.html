@@ -16,22 +16,19 @@
       href="{{ url_for('static', filename='css/form.css') }}"
     />
 
-    <title>Edit client</title>
+    <title>Ajout client</title>
   </head>
   <body>
     {% include('nav.html') %}
 
-    <form action="/client/edit" method="post">
-      <h1>Edit client</h1>
-
-      <input type="hidden" name="id_client" value="{{ client.client_id }}" />
+    <form action="/client/add" method="post">
+      <h1>Add client</h1>
 
       <div>
         <input
           type="text"
           id="nom_client"
           name="nom_client"
-          value="{{ client.nom_client }}"
           required
         />
         <label for="nom_client">Nom client</label>
@@ -42,7 +39,6 @@
           type="text"
           id="adresse_client"
           name="adresse_client"
-          value="{{ client.adresse_client }}"
           required
         />
         <label for="adresse_client">Adresse client</label>
@@ -50,29 +46,21 @@
 
       <div>
         <input
-          type="text"
+          type="email"
           id="email_client"
           name="email_client"
-          value="{{ client.email_client }}"
           required
         />
         <label for="email_client">Email client</label>
       </div>
 
-      <div class="skip">
-        <label for="categorie_id">Type client</label>
-        <select name="categorie_id" id="categorie_id" required>
-          <option value="">Selectionner une catégorie</option>
-  
-          {% for dico in categories %} 
-              {% if dico.categorie_id == client.categorie_id %}
-                  <option value="{{ dico.categorie_id }}" selected>{{ dico.libelle }}</option>
-              {% else %}
-                  <option value="{{ dico.categorie_id }}">{{ dico.libelle }}</option>
-              {% endif %} 
-          {% endfor %}
-        </select>
-      </div>
+      <select name="categorie_id" id="categorie_id" required>
+        <option value="">Selectionner une catégorie</option>
+
+        {% for dico in categories %}
+            <option value="{{ dico.categorie_id }}">{{ dico.libelle }}</option>
+        {% endfor %}
+      </select>
 
       <div class="container-button">
         <a href="/client/show">Annuler</a>

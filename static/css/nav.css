@@ -16,7 +16,7 @@ nav a:not(nav .container-nav-item a) {
 nav .container-nav-item {
     display: flex;
     align-items: center;
-    gap: 2em;
+    gap: 10px;
 }
 
 .burger {

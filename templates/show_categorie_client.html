@@ -14,36 +14,28 @@
 
     {% include('nav.html') %}
 
-<a class="addElement" href="/client/add">Ajouter un nouveau client</a>
-
-<p class="etat-center">L'entreprise FripCyle possède <span>{{ nbr_cli.nbr }}</span> clients</p>
+<a class="addElement" href="#">Ajouter une nouvelle catégorie</a>
 
 <div class="container-tab">
     <table>
         <thead>
             <tr>
                 <td>Id</td>
-                <td>Nom client</td>
-                <td>Adresse client</td>
-                <td>Email client</td>
-                <td>Numéro</td>
-                <td>Categorie</td>
+                <td>Libelle categorie</td>
+                <td>Nombre client associer</td>
                 <td>Bouton utilitaire</td>
             </tr>
         </thead>
 
         <tbody>
-            {% for dico in client %}
+            {% for dico in categories %}
             <tr>
-                <td>{{ dico.client_id }}</td>
-                <td>{{ dico.nom_client }}</td>
-                <td>{{ dico.adresse_client }}</td>
-                <td>{{ dico.email_client }}</td>
-                <td>{{ dico.numero_telephone }} <span>({{ dico.libelle_type_telephone }})</span></td>
-                <td>{{ dico.categorie_client }} <span>({{ dico.categorie_id }})</span></td>
+                <td>{{ dico.categorie_id }}</td>
+                <td>{{ dico.libelle }}</td>
+                <td><span>{{ dico.nombre_client }}</span></td>
                 <td>
-                    <a href="/client/edit/{{ dico.client_id }}"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <a href="/client/delete/{{ dico.client_id }}"><i class="fa-solid fa-trash"></i></a>
+                    <a href="#"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="#"><i class="fa-solid fa-trash"></i></a>
                 </td>
             </tr>
             {% endfor %}

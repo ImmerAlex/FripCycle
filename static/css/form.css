@@ -1,4 +1,7 @@
 form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
     margin: 50px auto;
     width: fit-content;
     border: 1px solid rgba(0, 0, 0, 0.3);
@@ -6,20 +9,47 @@ form {
     border-radius: 10px;
 }
 
+form h1 {
+    font-size: 30px;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+}
 
+form div {
+    position: relative;
+}
 
+form div input {
+    all: unset;
+    width: 100%;
+    padding: 5px;
+    border-bottom: 1px solid black;
+}
 
+form select {
+    width: 100%;
+    padding: 5px;
+}
 
+div.skip label {
+    display: block;
+    font-weight: bold;
+    transform: translateY(-10px);
+}
 
+form div:not(div.skip) label {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    font-weight: bold;
+    transition: 200ms;
+}
 
-
-
-
-
-
-
-
-
+form div:not(div.skip) input:focus + label,
+form div:not(div.skip) input.has-text + label {
+    top: -15px;
+}
 
 .container-button {
     display: flex;
