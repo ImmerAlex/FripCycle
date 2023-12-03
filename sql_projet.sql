@@ -68,6 +68,7 @@ CREATE TABLE Type_vetement (
 CREATE TABLE Client (
     client_id INT AUTO_INCREMENT,
     nom_client VARCHAR(50),
+    age_client INT,
     adresse_client VARCHAR(50),
     email_client VARCHAR(50),
     categorie_id INT NOT NULL,
@@ -155,6 +156,7 @@ VALUES
 INSERT INTO
     Client (
         nom_client,
+        age_client,
         adresse_client,
         email_client,
         categorie_id
@@ -162,90 +164,105 @@ INSERT INTO
 VALUES
     (
         'Marc Lefevre',
+        23,
         '23 Rue du Faubourg Saint-Antoine, Paris',
         'marc.lefevre@example.com',
         3
     ),
     (
         'Julie Dupont',
+        48,
         '56 Avenue des Ternes, Paris',
         'julie.dupont@example.com',
         2
     ),
     (
         'Antoine Moreau',
+        32,
         '34 Rue de la Pompe, Paris',
         'antoine.moreau@example.com',
         3
     ),
     (
         'Isabelle Martin',
+        22,
         '89 Boulevard Saint-Michel, Paris',
         'isabelle.martin@example.com',
         1
     ),
     (
         'Luc Dubois',
+        20,
         '67 Avenue de Wagram, Paris',
         'luc.dubois@example.com',
         2
     ),
     (
         'Nathalie Leroy',
+        35,
         '112 Rue du Faubourg Saint-Honoré, Paris',
         'nathalie.leroy@example.com',
         1
     ),
     (
         'Franck Richard',
+        44,
         '78 Avenue des Gobelins, Paris',
         'franck.richard@example.com',
         3
     ),
     (
         'Catherine Blanc',
+        50,
         '45 Quai de la Tournelle, Paris',
         'catherine.blanc@example.com',
         2
     ),
     (
         'Alexandre Leclerc',
+        31,
         '21 Rue de la Roquette, Paris',
         'alexandre.leclerc@example.com',
         1
     ),
     (
         'Valérie Lambert',
+        19,
         '98 Avenue de Clichy, Paris',
         'valerie.lambert@example.com',
         2
     ),
     (
         'Thierry Rousseau',
+        25,
         '76 Rue de Belleville, Paris',
         'thierry.rousseau@example.com',
         1
     ),
     (
         'Caroline Robert',
+        40,
         '32 Quai Branly, Paris',
         'caroline.robert@example.com',
         3
     ),
     (
         'Hugo Martin',
+        28,
         '54 Rue du Cherche-Midi, Paris',
         'hugo.martin@example.com',
         2
     ),
     (
         'Sylvie Lemoine',
+        33,
         '67 Avenue des Gobelins, Paris',
         'sylvie.lemoine@example.com',
         1
     ),
     (
         'Philippe Dubois',
+        54,
         '43 Rue de la Pompe, Paris',
         'philippe.dubois@example.com',
         3
@@ -268,6 +285,7 @@ INSERT INTO
 VALUES
     (4, 3, '5555555555'),
     (1, 1, '4444444444'),
+    (2, 1, '8729461937'),
     (3, 2, '6666666666'),
     (4, 2, '7777777777'),
     (5, 1, '8888888888'),

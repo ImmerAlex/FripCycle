@@ -2,10 +2,11 @@
     display: grid;
     place-items: center;
     width: 100%;
+    overflow-x: auto;
 }
 
 table {
-    margin: 20px 0;
+    margin: 20px;
     text-align: center;
 }
 
@@ -28,6 +29,13 @@ tbody tr:nth-child(even) {
     background-color: rgb(165, 165, 165);
 }
 
+tbody tr td:last-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
 tr td a i {
     padding: 10px 20px;
     border-radius: 5px;
@@ -42,25 +50,11 @@ tr td a i {
     background-color: rgb(255, 100, 100);
 }
 
-.etat-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin-top: 30px;
-    font-size: 25px;
-}
-
-.etat-center span {
-    margin: 0 5px;
-    color: red;
-}
-
 .addElement {
     display: block;
     font-size: 25px;
     text-align: center;
-    margin: 30px auto;
+    margin: 100px auto 20px auto;
     width: fit-content;
     transition: 200ms;
 }

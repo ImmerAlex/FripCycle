@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tableau_etat.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form_etat.css') }}">
+
+    <title>Etat client</title>
+</head>
+
+<body>
+
+    {% include('nav.html') %}
+    
+    <div class="container-form">
+        <form action="/client/etat" method="post">
+            <div class="container-option">
+                <div class="item">
+                    <input type="radio" id="ageParCategorie" name="ageParCategorie" value="1">
+                    <label for="ageParCategorie">Moyenne age par categorie</label>
+                </div>
+                
+                <div class="item">
+                    <input type="radio" id="reset" name="reset" value="default">
+                    <label for="reset">Default</label>
+                </div>
+            </div>
+            
+            <button type="submit">Valider</button>
+        </form>
+    </div>
+
+    <div class="container-tab">
+        <table>
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Nom client</td>
+                    <td>Age client</td>
+                    <td>Adresse client</td>
+                    <td>Email client</td>
+                    <td>Numéro</td>
+                    <td>Categorie</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for dico in client %}
+                <tr>
+                    <td>{{ dico.client_id }}</td>
+                    <td>{{ dico.nom_client }}</td>
+                    <td>{{ dico.age_client }}</td>
+                    <td>{{ dico.adresse_client }}</td>
+                    <td>{{ dico.email_client }}</td>
+                    <td>{{ dico.numero_telephone }} <span>({{ dico.libelle_type_telephone }})</span></td>
+                    <td>{{ dico.categorie_client }} <span>({{ dico.categorie_id }})</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>

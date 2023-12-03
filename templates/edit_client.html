@@ -1,86 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/reset.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/nav.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/form.css') }}"
-    />
 
-    <title>Edit client</title>
-  </head>
-  <body>
-    {% include('nav.html') %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}" />
 
-    <form action="/client/edit" method="post">
-      <h1>Edit client</h1>
+  <title>Edit client</title>
+</head>
 
-      <input type="hidden" name="id_client" value="{{ client.client_id }}" />
+<body>
+  {% include('nav.html') %}
 
-      <div>
-        <input
-          type="text"
-          id="nom_client"
-          name="nom_client"
-          value="{{ client.nom_client }}"
-          required
-        />
-        <label for="nom_client">Nom client</label>
-      </div>
+  <form action="/client/edit" method="post">
+    <h1>Edit client</h1>
 
-      <div>
-        <input
-          type="text"
-          id="adresse_client"
-          name="adresse_client"
-          value="{{ client.adresse_client }}"
-          required
-        />
-        <label for="adresse_client">Adresse client</label>
-      </div>
+    <input type="hidden" name="id_client" value="{{ client.client_id }}" />
 
-      <div>
-        <input
-          type="text"
-          id="email_client"
-          name="email_client"
-          value="{{ client.email_client }}"
-          required
-        />
-        <label for="email_client">Email client</label>
-      </div>
+    <div>
+      <input type="text" id="nom_client" name="nom_client" value="{{ client.nom_client }}" required />
+      <label for="nom_client">Nom client</label>
+    </div>
 
-      <div class="skip">
-        <label for="categorie_id">Type client</label>
-        <select name="categorie_id" id="categorie_id" required>
-          <option value="">Selectionner une catégorie</option>
-  
-          {% for dico in categories %} 
-              {% if dico.categorie_id == client.categorie_id %}
-                  <option value="{{ dico.categorie_id }}" selected>{{ dico.libelle }}</option>
-              {% else %}
-                  <option value="{{ dico.categorie_id }}">{{ dico.libelle }}</option>
-              {% endif %} 
-          {% endfor %}
-        </select>
-      </div>
+    <div>
+      <input type="text" id="age_client" name="age_client" value="{{ client.age_client }}" required />
+      <label for="age_client">Age client</label>
+    </div>
 
-      <div class="container-button">
-        <a href="/client/show">Annuler</a>
-        <button type="submit">Valider</button>
-      </div>
-    </form>
+    <div>
+      <input type="text" id="adresse_client" name="adresse_client" value="{{ client.adresse_client }}" required />
+      <label for="adresse_client">Adresse client</label>
+    </div>
 
-    <script src="{{ url_for('static', filename='javaScript/nav.js') }}"></script>
-    <script src="{{ url_for('static', filename='javaScript/form.js') }}"></script>
-  </body>
+    <div>
+      <input type="text" id="email_client" name="email_client" value="{{ client.email_client }}" required />
+      <label for="email_client">Email client</label>
+    </div>
+
+    <div>
+      <input type="text" id="numero_telephone" name="numero_telephone" value="{{ client.numero_client }}" required />
+      <label for="numero_telephone">Numéro de téléphone</label>
+    </div>
+
+    <div class="skip">
+      <label for="id_type_telephone">Type téléphone</label>
+      <select name="id_type_telephone" id="id_type_telephone" required>
+        <option value="">Sélectionner un type de téléphone</option>
+        {% for dico in telephones %}
+        {% if dico.id_type_telephone == client.type_telephone[0].id_type_telephone %}
+        <option value="{{ dico.id_type_telephone }}" selected>{{ dico.libelle_type_telephone }}</option>
+        {% else %}
+        <option value="{{ dico.id_type_telephone }}">{{ dico.libelle_type_telephone }}</option>
+        {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="skip">
+      <label for="categorie_id">Categorie client</label>
+      <select name="categorie_id" id="categorie_id" required>
+        <option value="">Sélectionner une catégorie</option>
+        {% for dico in categories %}
+        {% if dico.categorie_id == client.categorie_id %}
+        <option value="{{ dico.categorie_id }}" selected>{{ dico.libelle }}</option>
+        {% else %}
+        <option value="{{ dico.categorie_id }}">{{ dico.libelle }}</option>
+        {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="container-button">
+      <a href="/client/show">Annuler</a>
+      <button type="submit">Valider</button>
+    </div>
+  </form>
+
+
+
+  <script src="{{ url_for('static', filename='javaScript/form.js') }}"></script>
+</body>
+
 </html>

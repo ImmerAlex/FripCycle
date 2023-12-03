@@ -16,14 +16,13 @@
 
 <a class="addElement" href="/client/add">Ajouter un nouveau client</a>
 
-<p class="etat-center">L'entreprise FripCyle possède <span>{{ nbr_cli.nbr }}</span> clients</p>
-
 <div class="container-tab">
     <table>
         <thead>
             <tr>
                 <td>Id</td>
                 <td>Nom client</td>
+                <td>Age client</td>
                 <td>Adresse client</td>
                 <td>Email client</td>
                 <td>Numéro</td>
@@ -37,6 +36,7 @@
             <tr>
                 <td>{{ dico.client_id }}</td>
                 <td>{{ dico.nom_client }}</td>
+                <td>{{ dico.age_client }}</td>
                 <td>{{ dico.adresse_client }}</td>
                 <td>{{ dico.email_client }}</td>
                 <td>{{ dico.numero_telephone }} <span>({{ dico.libelle_type_telephone }})</span></td>
@@ -50,7 +50,6 @@
         </tbody>
     </table>
 </div>
-
 
     <script src="{{ url_for('static', filename='javaScript/nav.js') }}"></script>
 </body>

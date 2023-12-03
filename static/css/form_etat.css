@@ -1,0 +1,23 @@
+.container-form {
+    margin-top: 100px;
+}
+
+.container-form form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.container-option {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.container-option .item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
