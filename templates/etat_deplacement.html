@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/etat_deplacement.css') }}">
+
+    <title>Etat client</title>
+</head>
+
+<body>
+
+    {% include('nav.html') %}
+
+    <div class="blockMargin"></div>
+
+    <h1>Calcule la quantité totale récoltée par type de vêtement</h1>
+
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Libelle type vetement</td>
+                    <td>Total quantité récoltée</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for dico in total_type_vetement %}
+                <tr>
+                    <td>{{ dico.type_vetement_id }}</td>
+                    <td>{{ dico.libelle }}</td>
+                    <td>{{ dico.total_quantite_recoltee }}kg</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h1>Calcule de la quantité totale récoltée par camionette</h1>
+
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <td>Imatriculation</td>
+                    <td>Total quantité récoltée</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for dico in total_collecte_camionette %}
+                <tr>
+                    <td>{{ dico.imatriculation_camionette }}</td>
+                    <td>{{ dico.total_quantite_recoltee }}kg</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+</body>
+
+</html>

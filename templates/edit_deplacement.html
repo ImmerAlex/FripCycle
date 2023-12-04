@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}" />
+
+    <title>Deplacement edit</title>
+</head>
+
+<body>
+    {% include('nav.html') %}
+
+    <form action="/deplacement/edit" method="post">
+        <h1>Edit deplacement</h1>
+
+        <input type="hidden" name="deplacement_id" value="{{ deplacement.deplacement_id }}">
+
+        <div class="skip">
+            <label for="imatriculation_camionette">Imatriculation camionette</label>
+            <select name="imatriculation_camionette" id="imatriculation_camionette" required>
+                <option value="">Sélectionner une immatriculation</option>
+                {% for dico in imat %}
+                {% if dico.imatriculation_camionette == deplacement.imatriculation_camionette %}
+                <option value="{{ dico.imatriculation_camionette }}" selected>{{ dico.imatriculation_camionette }}
+                </option>
+                {% else %}
+                <option value="{{ dico.imatriculation_camionette }}">{{ dico.imatriculation_camionette }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="skip">
+            <label for="date_heure_collecte">Date deplacement</label>
+            <input type="datetime-local" name="date_heure_collecte" id="date_heure_collecte"
+                value="{{ deplacement.date_heure_collecte }}" required>
+        </div>
+
+        <div class="skip">
+            <label for="type_vetement_id">Type vetement</label>
+            <select name="type_vetement_id" id="type_vetement_id" required>
+                <option value="">Sélectionner un type de vetement</option>
+                {% for dico in type_vetement %}
+                {% if dico.type_vetement_id == deplacement.type_vetement_id %}
+                <option value="{{ dico.type_vetement_id }}" selected>{{ dico.libelle }}</option>
+                {% else %}
+                <option value="{{ dico.type_vetement_id }}">{{ dico.libelle }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <input type="number" name="quantite_recoltée" id="quantite_recoltée" value="{{ deplacement.quantite_recoltée }}" required>
+            <label for="quantite_recoltée">Quantier collecter</label>
+        </div>
+
+        <div class="container-button">
+            <a href="/deplacement/show">Annuler</a>
+            <button type="submit">Valider</button>
+        </div>
+    </form>
+
+    <script src="{{ url_for('static', filename='javaScript/form.js') }}"></script>
+</body>
+
+</html>

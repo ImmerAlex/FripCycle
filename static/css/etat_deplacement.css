@@ -1,0 +1,38 @@
+.blockMargin {
+    height: 120px;
+    width: 100%;
+}
+
+h1 {
+    display: flex;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: bold;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 40px;
+}
+
+.container table {
+    text-align: center;
+}
+
+.container thead {
+    background-color: black;
+    color: white;
+}
+
+.container tbody tr:nth-child(even) {
+    background-color: rgb(165, 165, 165);
+}
+
+.container thead tr td,
+.container tbody tr td {
+    padding: 5px 15px;
+}

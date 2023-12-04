@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tableau.css') }}">
+
+    <title>Deplacement</title>
+</head>
+
+<body>
+
+    {% include('nav.html') %}
+
+    <a class="addElement" href="/deplacement/add">Ajouter un deplacement</a>
+
+    <div class="container-tab">
+        <table>
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Plaque imatriculation</td>
+                    <td>Date heure collecte</td>
+                    <td>Type vetement collecter</td>
+                    <td>Quantiter collecter</td>
+                    <td>Bouton utilitaire</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for dico in deplacements %}
+                <tr>
+                    <td>{{ dico.deplacement_id }}</td>
+                    <td>{{ dico.imatriculation_camionette }}</td>
+                    <td>{{ dico.date_heure_collecte }}</td>
+                    <td>{{ dico.libelle }} <span>({{ dico.type_vetement_id }})</span></td>
+                    <td>{{ dico.quantite_recoltée }}</td>
+                    <td>
+                        <a href="/deplacement/edit/{{ dico.deplacement_id }}"><i class="fa-solid fa-pen-to-square"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+</body>
+
+</html>

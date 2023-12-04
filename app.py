@@ -11,7 +11,7 @@ def get_db():
             host="localhost",
             user="root",
             password="",
-            database="BDD_aimmer",
+            database="FripCycle",
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -383,11 +383,144 @@ def client_achat_show():
             JOIN Client c ON a.client_id = c.client_id
             JOIN Type_vetement tv ON a.type_vetement_id = tv.type_vetement_id
             GROUP BY c.client_id
-            ORDER BY c.client_id; '''
+            ORDER BY c.client_id '''
     cursor.execute(sql)
     somme_achat = cursor.fetchall()
 
     return render_template("etat_achat_client.html", achat=achat, somme_achat=somme_achat)
+
+
+
+
+
+@app.route("/deplacement/show")
+def deplacement_show():
+    
+    cursor = get_db().cursor()
+    sql = ''' SELECT d.deplacement_id, c.imatriculation_camionette, d.date_heure_collecte, tv.type_vetement_id, tv.libelle, r.quantite_recoltée
+            FROM Deplacement d
+            JOIN Camionette c ON d.imatriculation_camionette = c.imatriculation_camionette
+            JOIN recolte r ON d.deplacement_id = r.deplacement_id
+            JOIN Type_vetement tv ON r.type_vetement_id = tv.type_vetement_id '''
+    cursor.execute(sql)
+    deplacements = cursor.fetchall()
+    
+    return render_template("show_deplacement.html", deplacements=deplacements)
+
+
+@app.route("/deplacement/edit/<id>")
+def deplacement_edit(id):
+    
+    cursor = get_db().cursor()
+    sql = ''' SELECT d.deplacement_id, c.imatriculation_camionette, d.date_heure_collecte, tv.type_vetement_id, tv.libelle, r.quantite_recoltée
+            FROM Deplacement d
+            JOIN Camionette c ON d.imatriculation_camionette = c.imatriculation_camionette
+            JOIN recolte r ON d.deplacement_id = r.deplacement_id
+            JOIN Type_vetement tv ON r.type_vetement_id = tv.type_vetement_id
+            WHERE d.deplacement_id = %s '''
+    cursor.execute(sql, (id,))
+    deplacement = cursor.fetchone()
+    
+    sql = ''' SELECT imatriculation_camionette FROM Camionette '''
+    cursor.execute(sql)
+    imatriculation = cursor.fetchall()
+    
+    sql = ''' SELECT tv.type_vetement_id, tv.libelle FROM Type_vetement tv '''
+    cursor.execute(sql)
+    type_vetement = cursor.fetchall()
+        
+    return render_template("edit_deplacement.html", deplacement=deplacement, imat=imatriculation, type_vetement=type_vetement)
+
+
+
+@app.route("/deplacement/edit/", methods=["POST"])
+def deplacement_edit_valid():
+    if request.method == "POST":
+        form = request.form
+        deplacement_id = form.get('deplacement_id')
+        imatriculation_camionette = form.get('imatriculation_camionette')
+        date_heure_collecte = form.get('date_heure_collecte')
+        type_vetement_id = form.get('type_vetement_id')
+        quantite_recoltee = form.get('quantite_recoltée')
+        
+        cursor = get_db().cursor()
+        sql_update = ''' UPDATE Deplacement
+                        SET imatriculation_camionette = %s, date_heure_collecte = %s
+                        WHERE deplacement_id = %s '''
+        cursor.execute(sql_update, (imatriculation_camionette, date_heure_collecte, deplacement_id))
+        get_db().commit()
+
+        sql_update_recolte = ''' UPDATE recolte
+                                SET type_vetement_id = %s, quantite_recoltée = %s
+                                WHERE deplacement_id = %s '''
+        cursor.execute(sql_update_recolte, (type_vetement_id, quantite_recoltee, deplacement_id))
+        get_db().commit()
+
+        return redirect("/deplacement/show")
+
+
+@app.route("/deplacement/add")
+def deplacement_add():
+    
+    cursor = get_db().cursor()    
+    sql = ''' SELECT imatriculation_camionette FROM Camionette '''
+    cursor.execute(sql)
+    imatriculation = cursor.fetchall()
+    
+    sql = ''' SELECT tv.type_vetement_id, tv.libelle FROM Type_vetement tv '''
+    cursor.execute(sql)
+    type_vetement = cursor.fetchall()
+    
+    return render_template("add_deplacement.html", imat=imatriculation, type_vetement=type_vetement)
+
+
+@app.route("/deplacement/add", methods=["POST"])
+def deplacement_add_valid():
+    if request.method == "POST":
+        form = request.form
+
+        imatriculation_camionette = form.get('imatriculation_camionette')
+        date_heure_collecte = form.get('date_heure_collecte')
+        type_vetement_id = form.get('type_vetement_id')
+        quantite_recoltee = form.get('quantite_recoltée')
+
+        cursor = get_db().cursor()
+
+        sql = '''INSERT INTO Deplacement (date_heure_collecte, imatriculation_camionette)
+                                    VALUES (%s, %s)'''
+        cursor.execute(sql, (date_heure_collecte, imatriculation_camionette))
+        get_db().commit()
+
+        deplacement_id = cursor.lastrowid
+
+        sql = '''INSERT INTO recolte (deplacement_id, type_vetement_id, quantite_recoltée)
+                                VALUES (%s, %s, %s)'''
+        cursor.execute(sql, (deplacement_id, type_vetement_id, quantite_recoltee))
+        get_db().commit()
+
+        return redirect("/deplacement/show")
+
+
+@app.route("/deplacement/etat/show")
+def etat_deplacement_show():
+    
+    cursor = get_db().cursor()
+    sql = ''' SELECT tv.type_vetement_id, tv.libelle, SUM(r.quantite_recoltée) AS total_quantite_recoltee
+            FROM Type_vetement tv
+            LEFT JOIN recolte r ON tv.type_vetement_id = r.type_vetement_id
+            GROUP BY tv.type_vetement_id '''
+    cursor.execute(sql)
+    total_type_vetement = cursor.fetchall()
+    
+    sql = ''' SELECT c.imatriculation_camionette, SUM(r.quantite_recoltée) AS total_quantite_recoltee
+            FROM Camionette c
+            LEFT JOIN Deplacement d ON c.imatriculation_camionette = d.imatriculation_camionette
+            LEFT JOIN recolte r ON d.deplacement_id = r.deplacement_id
+            GROUP BY c.imatriculation_camionette '''
+    cursor.execute(sql)
+    total_collecte_camionette = cursor.fetchall()
+    
+    return render_template("etat_deplacement.html", total_type_vetement=total_type_vetement, total_collecte_camionette=total_collecte_camionette)
 
 
 if __name__ == "__main__":
