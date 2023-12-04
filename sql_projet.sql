@@ -496,3 +496,11 @@ VALUES
     (13, 13),
     (14, 14),
     (15, 15);
+
+
+SELECT c.client_id, c.nom_client, SUM(a.quantiter_achat * tv.prix_kg) AS montant_total_achat
+FROM acheter a
+INNER JOIN Client c ON a.client_id = c.client_id
+INNER JOIN Type_vetement tv ON a.type_vetement_id = tv.type_vetement_id
+GROUP BY c.client_id;
+

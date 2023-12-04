@@ -5,6 +5,11 @@
     overflow-x: auto;
 }
 
+.blockMargin {
+    height: 120px;
+    width: 100%;
+}
+
 table {
     margin: 20px;
     text-align: center;
@@ -61,4 +66,12 @@ tr td a i {
 
 .addElement:hover {
     transform: scale(1.1);
+}
+
+h1 {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    font-size: 30px;
+    margin-top: 30px;
 }

@@ -240,33 +240,33 @@ def client_delete_cascade(id):
 # ------------------ Etat client ---------------------
 # ----------------------------------------------------
 
+import random
+
 @app.route("/client/etat", methods=["GET"])
 def client_show_etat():
 
-    if session.get("test"):
-        print("session test existe")
-    else:
-        cursor = get_db().cursor()
-        sql = ''' SELECT 
-                c.client_id, 
-                c.nom_client, 
-                c.age_client, 
-                c.adresse_client, 
-                c.email_client, 
-                c.categorie_id, 
-                cc.categorie_id, 
-                cc.libelle AS categorie_client, 
-                p.numero_telephone, 
-                tt.libelle_type_telephone AS libelle_type_telephone
-            FROM Client c
-            JOIN Categorie_client cc ON c.categorie_id = cc.categorie_id
-            LEFT JOIN possede p ON c.client_id = p.client_id
-            LEFT JOIN Type_telephone tt ON p.id_type_telephone = tt.id_type_telephone
-            ORDER BY c.client_id '''
-        cursor.execute(sql)
-        clients = cursor.fetchall()
+    cursor = get_db().cursor()
+    sql = '''SELECT cc.categorie_id, cc.libelle, ROUND(AVG(c.age_client)) AS moyenne, cc.poid_necessaire, cc.reduction
+            FROM Categorie_client cc
+            JOIN Client c ON cc.categorie_id = c.categorie_id
+            GROUP BY cc.categorie_id, cc.libelle'''
+    cursor.execute(sql)
+    moyenne_age = cursor.fetchall()
 
-    return render_template("etat_client.html", client=clients)
+    libelles = []
+    moyennes = []
+    couleurs = []
+
+    for dico in moyenne_age:
+        libelle = dico.get("libelle")
+        moyennes.append(int(dico.get("moyenne")))
+        libelles.append(libelle)
+        couleur = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+        couleurs.append(couleur)
+
+    return render_template("etat_client.html", moyenne_age=moyenne_age, libelles=libelles, moyennes=moyennes, couleurs=couleurs)
+
+
 
 
 @app.route("/client/etat", methods=["POST"])
@@ -328,6 +328,37 @@ def categorie_client_delete(id):
     get_db().commit()
 
     return redirect("/categorie-client/show")
+
+
+
+# ----------------------------------------------------
+# --------------------- Achat ------------------------
+# ----------------------------------------------------
+
+
+
+@app.route("/client/achat/show")
+def client_achat_show():
+
+    cursor = get_db().cursor()
+    sql = ''' SELECT c.client_id, c.nom_client, tv.libelle AS libelle_vetement, a.quantiter_achat, tv.prix_kg AS prix_unitaire, a.date_heure_achat
+            FROM acheter a
+            JOIN Client c ON a.client_id = c.client_id
+            JOIN Type_vetement tv ON a.type_vetement_id = tv.type_vetement_id
+            ORDER BY c.client_id '''
+    cursor.execute(sql)
+    achat = cursor.fetchall()
+
+    sql = ''' SELECT c.client_id, c.nom_client, SUM(a.quantiter_achat * tv.prix_kg) AS montant_total_achat
+            FROM acheter a
+            JOIN Client c ON a.client_id = c.client_id
+            JOIN Type_vetement tv ON a.type_vetement_id = tv.type_vetement_id
+            GROUP BY c.client_id
+            ORDER BY c.client_id; '''
+    cursor.execute(sql)
+    somme_achat = cursor.fetchall()
+
+    return render_template("etat_achat_client.html", achat=achat, somme_achat=somme_achat)
 
 
 if __name__ == "__main__":

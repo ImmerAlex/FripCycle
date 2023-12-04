@@ -1,0 +1,28 @@
+.blockMargin {
+    height: 120px;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.item table {
+    text-align: center;
+}
+
+.item thead {
+    background-color: black;
+    color: white;
+}
+
+.item tbody tr:nth-child(even) {
+    background-color: rgb(165, 165, 165);
+}
+
+.item thead tr td,
+.item tbody tr td {
+    padding: 5px 15px;
+}

@@ -9,8 +9,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/tableau_etat.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/form_etat.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/etat_client.css') }}">
 
     <title>Etat client</title>
 </head>
@@ -19,53 +18,64 @@
 
     {% include('nav.html') %}
 
-    <div class="container-form">
-        <form action="/client/etat" method="post">
-            <div class="container-option">
-                <div class="item">
-                    <input type="radio" id="ageParCategorie" name="ageParCategorie" value="1">
-                    <label for="ageParCategorie">Moyenne age par categorie</label>
-                </div>
+    <div class="blockMargin"></div>
 
-                <div class="item">
-                    <input type="radio" id="reset" name="reset" value="default">
-                    <label for="reset">Default</label>
-                </div>
-            </div>
-
-            <button type="submit">Valider</button>
-        </form>
+    <div class="container">
+        <div class="item">
+            <table>
+                <thead>
+                    <tr>
+                        <td>Id</td>
+                        <td>Libelle categorie</td>
+                        <td>Poid necessaire</td>
+                        <td>reduction</td>
+                        <td>Moyenne age</td>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                    {% for dico in moyenne_age %}
+                    <tr>
+                        <td>{{ dico.categorie_id }}</td>
+                        <td>{{ dico.libelle }}</td>
+                        <td>{{ dico.poid_necessaire }} kg</td>
+                        <td>{{ dico.reduction }}%</td>
+                        <td>{{ dico.moyenne }} ans</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="item">
+            <canvas id="canvasMoyenneAge"></canvas>
+        </div>
     </div>
 
-    <div class="container-tab">
-        <table>
-            <thead>
-                <tr>
-                    <td>Id</td>
-                    <td>Nom client</td>
-                    <td>Age client</td>
-                    <td>Adresse client</td>
-                    <td>Email client</td>
-                    <td>Numéro</td>
-                    <td>Categorie</td>
-                </tr>
-            </thead>
 
-            <tbody>
-                {% for dico in client %}
-                <tr>
-                    <td>{{ dico.client_id }}</td>
-                    <td>{{ dico.nom_client }}</td>
-                    <td>{{ dico.age_client }}</td>
-                    <td>{{ dico.adresse_client }}</td>
-                    <td>{{ dico.email_client }}</td>
-                    <td>{{ dico.numero_telephone }} <span>({{ dico.libelle_type_telephone }})</span></td>
-                    <td>{{ dico.categorie_client }} <span>({{ dico.categorie_id }})</span></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+
+        new Chart(document.getElementById("canvasMoyenneAge"), {
+            type: 'pie',
+            data: {
+                labels: {{ libelles | safe }},
+                datasets: [{
+                    backgroundColor: {{ couleurs | safe }},
+                data: {{ moyennes | safe }}
+                    }]
+            },
+            options: {
+            title: {
+                display: true,
+                text: 'Pie Chart for admin panel'
+            },
+            responsive: false
+        }
+        });
+
+    </script>
 
 </body>
 
