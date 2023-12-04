@@ -181,7 +181,7 @@ VALUES
         32,
         '34 Rue de la Pompe, Paris',
         'antoine.moreau@example.com',
-        3
+        5
     ),
     (
         'Isabelle Martin',
@@ -195,7 +195,7 @@ VALUES
         20,
         '67 Avenue de Wagram, Paris',
         'luc.dubois@example.com',
-        2
+        4
     ),
     (
         'Nathalie Leroy',
@@ -209,7 +209,7 @@ VALUES
         44,
         '78 Avenue des Gobelins, Paris',
         'franck.richard@example.com',
-        3
+        2
     ),
     (
         'Catherine Blanc',
@@ -223,14 +223,14 @@ VALUES
         31,
         '21 Rue de la Roquette, Paris',
         'alexandre.leclerc@example.com',
-        1
+        3
     ),
     (
         'Valérie Lambert',
         19,
         '98 Avenue de Clichy, Paris',
         'valerie.lambert@example.com',
-        2
+        6
     ),
     (
         'Thierry Rousseau',
@@ -283,7 +283,6 @@ VALUES
 INSERT INTO
     possede (client_id, id_type_telephone, numero_telephone)
 VALUES
-    (4, 3, '5555555555'),
     (1, 1, '4444444444'),
     (2, 1, '8729461937'),
     (3, 2, '6666666666'),

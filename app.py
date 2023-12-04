@@ -6,23 +6,22 @@ app.secret_key = "azerty123"
 
 def get_db():
     if 'db' not in g:
-        g.db =  pymysql.connect(
+        g.db = pymysql.connect(
             host="localhost",
-            user="root",    
+            user="root",
             password="",
-            database="fripcycle",
+            database="bdd_aimmer",
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
     return g.db
+
 
 @app.teardown_appcontext
 def teardown_db(exception):
     db = g.pop('db', None)
     if db is not None:
         db.close()
-
-
 
 
 @app.route("/")
@@ -32,7 +31,6 @@ def home():
     cursor.execute(sql)
     type_vetement = cursor.fetchall()
     return render_template("home.html", type=type_vetement)
-
 
 
 # ----------------------------------------------------
@@ -61,7 +59,7 @@ def show_client():
             ORDER BY c.client_id '''
     cursor.execute(sql)
     clients = cursor.fetchall()
-    
+
     return render_template("show_client.html", client=clients)
 
 
@@ -72,28 +70,47 @@ def client_add():
             FROM Categorie_client cc'''
     cursor.execute(sql)
     categorie_client = cursor.fetchall()
-    return render_template("add_client.html", categories=categorie_client)
+
+    sql = ''' SELECT tt.id_type_telephone as id, tt.libelle_type_telephone as libelle 
+            FROM Type_telephone tt '''
+    cursor.execute(sql)
+    telephones = cursor.fetchall()
+
+    return render_template("add_client.html", categories=categorie_client, tel=telephones)
+
 
 @app.route("/client/add", methods=["POST"])
 def client_add_valid():
     if request.method == "POST":
         form = request.form
         nom = form.get("nom_client")
+        age = form.get("age_client")
         adresse = form.get("adresse_client")
         email = form.get("email_client")
         categorie = form.get("categorie_id")
-        tup_edit_client = (nom, adresse, email, categorie)
-        
+        id_type_telephone = form.get("id_type_telephone")
+        numero_telephone = form.get("numero_telephone")
+
         cursor = get_db().cursor()
-        sql = ''' INSERT INTO Client(nom_client, adresse_client, email_client, categorie_id)
-                VALUES (%s, %s, %s, %s)'''
-        cursor.execute(sql, tup_edit_client)
-        get_db().commit()        
+        sql_insert_client = '''INSERT INTO Client(nom_client, age_client, adresse_client, email_client, categorie_id)
+                               VALUES (%s, %s, %s, %s, %s)'''
+        cursor.execute(sql_insert_client,
+                       (nom, age, adresse, email, categorie))
+        get_db().commit()
+
+        last_client_id = cursor.lastrowid
+
+        sql_insert_possede = '''INSERT INTO possede(client_id, id_type_telephone, numero_telephone)
+                                VALUES (%s, %s, %s)'''
+        cursor.execute(sql_insert_possede, (last_client_id,
+                       id_type_telephone, numero_telephone))
+        get_db().commit()
+
     return redirect("/client/show")
 
 
 @app.route("/client/edit/<id>", methods=["GET"])
-def edit_client(id):    
+def edit_client(id):
     cursor = get_db().cursor()
 
     sql_client = '''SELECT c.*, 
@@ -155,16 +172,15 @@ def client_edit_valid():
         id_type_telephone = form.get("id_type_telephone")
 
         cursor = get_db().cursor()
-        sql_update_client = '''UPDATE Client 
+        sql = '''UPDATE Client 
                             SET nom_client = %s, age_client = %s, adresse_client = %s, email_client = %s, categorie_id = %s 
                             WHERE client_id = %s'''
-        cursor.execute(sql_update_client, (nom_client, age_client, adresse_client, email_client, categorie_id, id_client))
+        cursor.execute(sql, (nom_client, age_client, adresse_client, email_client, categorie_id, id_client))
 
-        sql_update_possede = '''UPDATE possede 
-                                SET id_type_telephone = %s, numero_telephone = %s  
-                                WHERE client_id = %s'''
+        sql_update_possede = ''' UPDATE possede 
+                        SET id_type_telephone = %s, numero_telephone = %s  
+                        WHERE client_id = %s '''
         cursor.execute(sql_update_possede, (id_type_telephone, numero_telephone, id_client))
-
         get_db().commit()
 
     return redirect("/client/show")
@@ -179,15 +195,13 @@ def client_delete(id):
     return redirect("/client/show")
 
 
-
-
 # ----------------------------------------------------
 # ------------------ Etat client ---------------------
 # ----------------------------------------------------
 
 @app.route("/client/etat", methods=["GET"])
 def client_show_etat():
-    
+
     if session.get("test"):
         print("session test existe")
     else:
@@ -210,21 +224,13 @@ def client_show_etat():
             ORDER BY c.client_id '''
         cursor.execute(sql)
         clients = cursor.fetchall()
-    
+
     return render_template("etat_client.html", client=clients)
 
 
 @app.route("/client/etat", methods=["POST"])
 def client_etat_valid():
     return redirect("/cleint/etat")
-
-
-
-
-
-
-
-
 
 
 # ----------------------------------------------------
@@ -241,12 +247,6 @@ def categorie_client_show():
     cursor.execute(sql)
     categorie_client = cursor.fetchall()
     return render_template("show_categorie_client.html", categories=categorie_client)
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
