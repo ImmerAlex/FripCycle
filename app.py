@@ -7,10 +7,10 @@ app.secret_key = "azerty123"
 def get_db():
     if 'db' not in g:
         g.db = pymysql.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="bdd_aimmer",
+            host="serveurmysql",
+            user="aimmer",
+            password="1608",
+            database="BDD_aimmer",
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -92,18 +92,16 @@ def client_add_valid():
         numero_telephone = form.get("numero_telephone")
 
         cursor = get_db().cursor()
-        sql_insert_client = '''INSERT INTO Client(nom_client, age_client, adresse_client, email_client, categorie_id)
-                               VALUES (%s, %s, %s, %s, %s)'''
-        cursor.execute(sql_insert_client,
-                       (nom, age, adresse, email, categorie))
+        sql = '''INSERT INTO Client(nom_client, age_client, adresse_client, email_client, categorie_id)
+                            VALUES (%s, %s, %s, %s, %s)'''
+        cursor.execute(sql, (nom, age, adresse, email, categorie))
         get_db().commit()
 
         last_client_id = cursor.lastrowid
 
-        sql_insert_possede = '''INSERT INTO possede(client_id, id_type_telephone, numero_telephone)
+        sql = '''INSERT INTO possede(client_id, id_type_telephone, numero_telephone)
                                 VALUES (%s, %s, %s)'''
-        cursor.execute(sql_insert_possede, (last_client_id,
-                       id_type_telephone, numero_telephone))
+        cursor.execute(sql, (last_client_id, id_type_telephone, numero_telephone))
         get_db().commit()
 
     return redirect("/client/show")
@@ -177,10 +175,10 @@ def client_edit_valid():
                             WHERE client_id = %s'''
         cursor.execute(sql, (nom_client, age_client, adresse_client, email_client, categorie_id, id_client))
 
-        sql_update_possede = ''' UPDATE possede 
+        sql = ''' UPDATE possede 
                         SET id_type_telephone = %s, numero_telephone = %s  
                         WHERE client_id = %s '''
-        cursor.execute(sql_update_possede, (id_type_telephone, numero_telephone, id_client))
+        cursor.execute(sql, (id_type_telephone, numero_telephone, id_client))
         get_db().commit()
 
     return redirect("/client/show")
@@ -188,11 +186,54 @@ def client_edit_valid():
 
 @app.route("/client/delete/<id>")
 def client_delete(id):
+
+    referrer = request.referrer
+    referrer = referrer.split("/")
+
     cursor = get_db().cursor()
+    sql = ''' SELECT c.categorie_id FROM Client c 
+            WHERE c.client_id = %s '''
+    cursor.execute(sql, (id,))
+    id_categorie = cursor.fetchone()
+
+    sql = ''' DELETE FROM possede p WHERE p.client_id = %s '''
+    cursor.execute(sql, (id,))
+    get_db().commit()  
+
     sql = ''' DELETE FROM Client c WHERE c.client_id = %s '''
     cursor.execute(sql, (id,))
-    get_db().commit()
+    get_db().commit() 
+    
+    if "deleteCascade" in referrer:
+        return redirect(f"/categorie-client/delete/{id_categorie.get('categorie_id')}")
     return redirect("/client/show")
+
+
+@app.route("/client/deleteCascade/<id>")
+def client_delete_cascade(id):
+
+    cursor = get_db().cursor()
+    sql = ''' SELECT 
+                c.client_id, 
+                c.nom_client, 
+                c.age_client, 
+                c.adresse_client, 
+                c.email_client, 
+                c.categorie_id, 
+                cc.categorie_id, 
+                cc.libelle AS categorie_client, 
+                p.numero_telephone, 
+                tt.libelle_type_telephone AS libelle_type_telephone
+            FROM Client c
+            JOIN Categorie_client cc ON c.categorie_id = cc.categorie_id
+            LEFT JOIN possede p ON c.client_id = p.client_id
+            LEFT JOIN Type_telephone tt ON p.id_type_telephone = tt.id_type_telephone
+            WHERE c.categorie_id = %s
+            ORDER BY c.client_id '''
+    cursor.execute(sql, (id,))
+    clients = cursor.fetchall()
+    
+    return render_template("delete_cascade_client.html", client=clients)
 
 
 # ----------------------------------------------------
@@ -240,13 +281,53 @@ def client_etat_valid():
 @app.route("/categorie-client/show")
 def categorie_client_show():
     cursor = get_db().cursor()
-    sql = ''' SELECT cc.categorie_id, cc.libelle, COUNT(c.client_id) AS nombre_client
+    sql = ''' SELECT cc.categorie_id, cc.libelle, cc.poid_necessaire, cc.reduction, COUNT(c.client_id) AS nombre_client
             FROM Categorie_client cc
             LEFT JOIN Client c ON cc.categorie_id = c.categorie_id
             GROUP BY cc.categorie_id, cc.libelle; '''
     cursor.execute(sql)
     categorie_client = cursor.fetchall()
     return render_template("show_categorie_client.html", categories=categorie_client)
+
+
+@app.route("/categorie-client/add")
+def categorie_client_add():
+    return render_template("add_categorie_client.html")
+
+@app.route("/categorie-client/add", methods=["POST"])
+def categorie_client_add_valid():
+    if request.method == "POST":
+        form = request.form
+        libelle = form.get("libelle")
+        poid_necessaire = form.get("poid_necessaire")
+        reduction = form.get("reduction")
+
+        cursor = get_db().cursor()
+        sql = ''' INSERT INTO Categorie_client(libelle, poid_necessaire, reduction)
+                VALUES (%s, %s, %s) '''
+        cursor.execute(sql, (libelle, poid_necessaire, reduction))
+        get_db().commit()
+
+    return redirect("/categorie-client/show")
+
+
+@app.route("/categorie-client/delete/<id>")
+def categorie_client_delete(id):
+
+    cursor = get_db().cursor()
+    sql = ''' SELECT * FROM Client c
+            WHERE c.categorie_id = %s '''
+    cursor.execute(sql, (id,))
+    client_associer = cursor.fetchone()
+
+    if client_associer:
+        return redirect(f"/client/deleteCascade/{id}")
+    
+    sql = ''' DELETE FROM Categorie_client cc WHERE cc.categorie_id = %s '''
+    cursor.execute(sql, (id,))
+    get_db().commit()
+
+    return redirect("/categorie-client/show")
 
 
 if __name__ == "__main__":

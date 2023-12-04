@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tableau.css') }}">
+
+    <title>Client delete cascade</title>
+</head>
+
+<body>
+
+    {% include('nav.html') %}
+
+    <div class="addElement"></div>
+
+    <div class="container-tab">
+        <table>
+            <thead>
+                <tr>
+                    <td>Id</td>
+                    <td>Nom client</td>
+                    <td>Age client</td>
+                    <td>Adresse client</td>
+                    <td>Email client</td>
+                    <td>Numéro</td>
+                    <td>Categorie</td>
+                    <td>Bouton utilitaire</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for dico in client %}
+                <tr>
+                    <td>{{ dico.client_id }}</td>
+                    <td>{{ dico.nom_client }}</td>
+                    <td>{{ dico.age_client }}</td>
+                    <td>{{ dico.adresse_client }}</td>
+                    <td>{{ dico.email_client }}</td>
+                    <td>{{ dico.numero_telephone }} <span>({{ dico.libelle_type_telephone }})</span></td>
+                    <td>{{ dico.categorie_client }} <span>({{ dico.categorie_id }})</span></td>
+                    <td>
+                        <a href="/client/delete/{{ dico.client_id }}"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>

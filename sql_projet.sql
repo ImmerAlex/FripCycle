@@ -266,7 +266,22 @@ VALUES
         '43 Rue de la Pompe, Paris',
         'philippe.dubois@example.com',
         3
-    );
+    ),
+    ('Marc Lefevre', 23, '23 Rue du Faubourg Saint-Antoine, Paris', 'marc.lefevre@example.com', 3),
+    ('Jeanne Dubois', 30, '15 Rue de la République, Lyon', 'jeanne.dubois@example.com', 2),
+    ('Thomas Moreau', 28, '8 Rue des Lilas, Marseille', 'thomas.moreau@example.com', 1),
+    ('Sophie Girard', 35, '42 Avenue des Champs-Élysées, Paris', 'sophie.girard@example.com', 3),
+    ('Lucas Martin', 25, '5 Boulevard Haussmann, Paris', 'lucas.martin@example.com', 2),
+    ('Emma Lambert', 29, '10 Place de la Concorde, Lyon', 'emma.lambert@example.com', 1),
+    ('Antoine Roussel', 31, '18 Rue de la Paix, Marseille', 'antoine.roussel@example.com', 3),
+    ('Camille Dupont', 27, '30 Avenue Montaigne, Paris', 'camille.dupont@example.com', 2),
+    ('Hugo Gauthier', 26, '3 Rue Royale, Lyon', 'hugo.gauthier@example.com', 1),
+    ('Manon Chevalier', 24, '12 Rue de Rivoli, Marseille', 'manon.chevalier@example.com', 3),
+    ('Léa Petit', 32, '7 Avenue Foch, Paris', 'lea.petit@example.com', 2),
+    ('Nicolas Bernard', 33, '20 Rue de la Liberté, Lyon', 'nicolas.bernard@example.com', 1),
+    ('Julie Leroy', 22, '25 Place Vendôme, Marseille', 'julie.leroy@example.com', 3),
+    ('Pierre Renault', 34, '9 Rue de la Madeleine, Paris', 'pierre.renault@example.com', 2),
+    ('Elise Simon', 27, '14 Avenue des Champs-Élysées, Lyon', 'elise.simon@example.com', 1);
 
 INSERT INTO
     Type_vetement (libelle, prix_kg)
@@ -297,7 +312,22 @@ VALUES
     (12, 3, '6789012345'),
     (13, 1, '7890123456'),
     (14, 2, '8901234567'),
-    (15, 3, '9012345678');
+    (15, 3, '9012345678'),
+    (16, 1, '0123456789'),
+    (17, 2, '1234567890'),
+    (18, 3, '2345678901'),
+    (19, 1, '3456789012'),
+    (20, 2, '4567890123'),
+    (21, 3, '5678901234'),
+    (22, 1, '6789012345'),
+    (23, 2, '7890123456'),
+    (24, 3, '8901234567'),
+    (25, 1, '9012345678'),
+    (26, 2, '0123456789'),
+    (27, 3, '1234567890'),
+    (28, 1, '2345678901'),
+    (29, 2, '3456789012'),
+    (30, 3, '4567890123');
 
 INSERT INTO acheter (
     client_id,

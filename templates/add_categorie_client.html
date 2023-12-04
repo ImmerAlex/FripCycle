@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}" />
+
+    <title>Ajout client</title>
+</head>
+
+<body>
+    {% include('nav.html') %}
+
+    <form action="/categorie-client/add" method="post">
+        <h1>Ajout client</h1>
+
+        <div>
+            <input type="text" id="libelle" name="libelle" required />
+            <label for="libelle">Libelle categorie</label>
+        </div>
+
+        <div>
+            <input type="text" id="poid_necessaire" name="poid_necessaire" required />
+            <label for="poid_necessaire">Poid necessaire</label>
+        </div>
+
+        <div>
+            <input type="text" id="reduction" name="reduction" required />
+            <label for="reduction">Reduction (en %)</label>
+        </div>
+
+        <div class="container-button">
+            <a href="/categorie-client/show">Annuler</a>
+            <button type="submit">Valider</button>
+        </div>
+    </form>
+
+    <script src="{{ url_for('static', filename='javaScript/form.js') }}"></script>
+</body>
+
+</html>
