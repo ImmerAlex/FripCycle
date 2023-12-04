@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, session, g
 import pymysql.cursors
+import random
 app = Flask(__name__)
 app.secret_key = "azerty123"
 
@@ -7,9 +8,9 @@ app.secret_key = "azerty123"
 def get_db():
     if 'db' not in g:
         g.db = pymysql.connect(
-            host="serveurmysql",
-            user="aimmer",
-            password="1608",
+            host="localhost",
+            user="root",
+            password="",
             database="BDD_aimmer",
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
@@ -240,7 +241,6 @@ def client_delete_cascade(id):
 # ------------------ Etat client ---------------------
 # ----------------------------------------------------
 
-import random
 
 @app.route("/client/etat", methods=["GET"])
 def client_show_etat():
@@ -330,11 +330,40 @@ def categorie_client_delete(id):
     return redirect("/categorie-client/show")
 
 
+@app.route("/categorie-client/edit/<id>")
+def categorie_client_edit(id):
+    
+    cursor = get_db().cursor()
+    sql = ''' SELECT * FROM Categorie_client cc 
+            WHERE cc.categorie_id = %s  '''
+    cursor.execute(sql, (id,))
+    categorie = cursor.fetchone()
+    
+    return render_template("edit_categorie_client.html", categorie=categorie)
+
+
+@app.route("/categorie-client/edit/", methods=["POST"])
+def categorie_client_edit_valid():
+    if request.method == "POST":
+        form = request.form
+        id = form.get("categorie_id")
+        libelle = form.get("libelle")
+        poid_necessaire = form.get("poid_necessaire")
+        reduction = form.get("reduction")
+    
+    cursor = get_db().cursor()
+    sql = ''' UPDATE Categorie_client 
+            SET libelle = %s, poid_necessaire = %s, reduction = %s 
+            WHERE categorie_id = %s '''
+    cursor.execute(sql, (libelle, poid_necessaire, reduction, id))
+    get_db().commit()
+    
+    return redirect("/categorie-client/show")
+
 
 # ----------------------------------------------------
 # --------------------- Achat ------------------------
 # ----------------------------------------------------
-
 
 
 @app.route("/client/achat/show")
