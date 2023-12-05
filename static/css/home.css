@@ -16,7 +16,22 @@
     width: 50%;
 }
 
+footer {
+    display: flex;
+    justify-content: space-around;
+    background-color: #242526;
+    color: white;
+    margin-top: 30px;
+    padding: 20px 0;
+}
 
+footer ul li {
+    list-style: none;
+}
+
+footer ul li.decale {
+    margin-left: 15px;
+}
 
 
 

@@ -12,6 +12,8 @@ DROP TABLE IF EXISTS possede;
 
 DROP TABLE IF EXISTS Client;
 
+DROP TABLE IF EXISTS Conteneur_Type_vetement;
+
 DROP TABLE IF EXISTS Type_vetement;
 
 DROP TABLE IF EXISTS Type_telephone;
