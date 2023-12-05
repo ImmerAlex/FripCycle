@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, session, g
+from flask import Flask, render_template, redirect, request, g
 import pymysql.cursors
 import random
 app = Flask(__name__)
@@ -11,7 +11,7 @@ def get_db():
             host="localhost",
             user="root",
             password="",
-            database="FripCycle",
+            database="BDD_aimmer",
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -361,6 +361,8 @@ def categorie_client_edit_valid():
     return redirect("/categorie-client/show")
 
 
+
+
 # ----------------------------------------------------
 # --------------------- Achat ------------------------
 # ----------------------------------------------------
@@ -391,6 +393,10 @@ def client_achat_show():
 
 
 
+
+# ----------------------------------------------------
+# ------------------- Deplacement --------------------
+# ----------------------------------------------------
 
 
 @app.route("/deplacement/show")
@@ -499,6 +505,12 @@ def deplacement_add_valid():
         get_db().commit()
 
         return redirect("/deplacement/show")
+    
+
+
+# ----------------------------------------------------
+# ---------------- Etat deplacement  -----------------
+# ----------------------------------------------------
 
 
 @app.route("/deplacement/etat/show")
@@ -521,6 +533,141 @@ def etat_deplacement_show():
     total_collecte_camionette = cursor.fetchall()
     
     return render_template("etat_deplacement.html", total_type_vetement=total_type_vetement, total_collecte_camionette=total_collecte_camionette)
+
+
+
+# ----------------------------------------------------
+# -------------------- Conteneur  --------------------
+# ----------------------------------------------------
+
+
+@app.route("/conteneur/show")
+def conteneur_show():
+    
+    cursor = get_db().cursor()
+    sql = ''' SELECT c.conteneur_id, c.adresse_conteneur, c.distance_magasin, tv.libelle, tv.type_vetement_id, ctv.quantite 
+            FROM Conteneur_Type_Vetement ctv
+            JOIN Conteneur c ON ctv.conteneur_id = c.conteneur_id
+            JOIN Type_vetement tv ON ctv.type_vetement_id = tv.type_vetement_id '''
+    cursor.execute(sql)
+    conteneurs = cursor.fetchall()
+    
+    return render_template("show_conteneur.html", conteneurs=conteneurs)
+
+
+@app.route("/conteneur/add")
+def conteneur_add():
+    
+    cursor = get_db().cursor()
+    sql = ''' SELECT tv.type_vetement_id, tv.libelle
+            FROM Type_vetement tv '''
+    cursor.execute(sql)
+    type_vetements = cursor.fetchall()
+    
+    sql = ''' SELECT c.conteneur_id, c.adresse_conteneur 
+            FROM Conteneur c '''
+    cursor.execute(sql)
+    conteneurs = cursor.fetchall()
+    
+    return render_template("add_conteneur.html", type_vetements=type_vetements, conteneurs=conteneurs)
+
+
+@app.route("/conteneur/add", methods=["POST"])
+def conteneur_add_valid():
+    if request.method == "POST":
+        form = request.form
+        conteneur_id = form.get('conteneur_id')
+        type_vetement_id = form.get('type_vetement_id')
+        quantite = form.get('quantite')
+        
+        cursor = get_db().cursor()
+        sql_check = '''SELECT * FROM Conteneur_Type_vetement 
+                           WHERE conteneur_id = %s AND type_vetement_id = %s'''
+        cursor.execute(sql_check, (conteneur_id, type_vetement_id))
+        conteneur_type_existe = cursor.fetchone()
+
+        if conteneur_type_existe:
+            somme_quantitee = int(quantite) + conteneur_type_existe.get('quantite')
+            sql_update = '''UPDATE Conteneur_Type_vetement 
+                            SET quantite = %s 
+                            WHERE conteneur_id = %s AND type_vetement_id = %s'''
+            cursor.execute(sql_update, (somme_quantitee, conteneur_id, type_vetement_id))
+        else:
+            sql_insert = '''INSERT INTO Conteneur_Type_vetement (conteneur_id, type_vetement_id, quantite) 
+                            VALUES (%s, %s, %s)'''
+            cursor.execute(sql_insert, (conteneur_id, type_vetement_id, quantite))
+        
+    return redirect("/conteneur/show")
+
+
+@app.route("/conteneur/edit/<id_conteneur>/<id_type_vetement>")
+def conteneur_edit(id_conteneur, id_type_vetement):
+    
+    cursor = get_db().cursor()
+    sql = ''' SELECT * FROM Conteneur_Type_Vetement ctv
+            WHERE ctv.conteneur_id = %s AND ctv.type_vetement_id = %s '''
+    cursor.execute(sql, (id_conteneur, id_type_vetement))
+    conteneur = cursor.fetchone()
+    
+    sql = ''' SELECT tv.type_vetement_id, tv.libelle 
+            FROM Type_vetement tv '''
+    cursor.execute(sql)
+    type_vetement = cursor.fetchall()
+    
+    return render_template("edit_container.html", conteneur=conteneur, type_vetement=type_vetement)
+
+
+@app.route("/conteneur/edit", methods=["POST"])
+def conteneur_edit_valid():
+    if request.method == 'POST':
+        form = request.form
+        conteneur_id = form.get("conteneur_id")
+        type_vetement_id = form.get("type_vetement_id")
+        quantite = form.get("quantite")
+        
+        cursor = get_db().cursor()
+        sql = '''UPDATE Conteneur_Type_vetement 
+                SET quantite = %s 
+                WHERE conteneur_id = %s AND type_vetement_id = %s'''
+        cursor.execute(sql, (quantite, conteneur_id, type_vetement_id))
+        get_db().commit()
+    
+    return redirect("/conteneur/show")
+
+
+
+# ----------------------------------------------------
+# ------------------ Etat conteneur  -----------------
+# ----------------------------------------------------
+
+
+@app.route("/conteneur/etat/show")
+def conteneur_etat_show():
+    
+    cursor = get_db().cursor()    
+    sql = ''' SELECT c.conteneur_id, c.adresse_conteneur, SUM(ctv.quantite) AS total_quantite
+            FROM Conteneur c
+            LEFT JOIN Conteneur_Type_vetement ctv ON c.conteneur_id = ctv.conteneur_id
+            GROUP BY c.conteneur_id, c.adresse_conteneur
+            ORDER BY c.conteneur_id '''
+    cursor.execute(sql)
+    quantiter_par_conteneur = cursor.fetchall()
+    
+    
+    
+    sql = ''' SELECT SUM(tv.prix_kg * ctv.quantite) AS prix_total,
+            SUM(ctv.quantite) AS total_poid
+            FROM Type_vetement tv
+            JOIN Conteneur_Type_vetement ctv ON tv.type_vetement_id = ctv.type_vetement_id '''
+    cursor.execute(sql)
+    total_tout_conteneur = cursor.fetchone()
+    
+    
+    return render_template("etat_conteneur.html", quantiter_par_conteneur=quantiter_par_conteneur, total_tout_conteneur=total_tout_conteneur)
+
+
+
+
 
 
 if __name__ == "__main__":

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}" />
+
+  <title>Edit client</title>
+</head>
+
+<body>
+  {% include('nav.html') %}
+
+  <form action="/conteneur/edit" method="post">
+    <h1>Edit conteneur</h1>
+
+    <input type="hidden" name="conteneur_id" value="{{ conteneur.conteneur_id }}" />
+    <input type="hidden" name="type_vetement_id" value="{{ conteneur.type_vetement_id }}" />
+
+    <div>
+      <input type="text" id="quantite" name="quantite" value="{{ conteneur.quantite }}" required />
+      <label for="quantite">Quantite</label>
+    </div>
+
+    <div class="container-button">
+      <a href="/categorie-client/show">Annuler</a>
+      <button type="submit">Valider</button>
+    </div>
+  </form>
+
+  <script src="{{ url_for('static', filename='javaScript/form.js') }}"></script>
+</body>
+
+</html>

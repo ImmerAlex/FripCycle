@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nav.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}" />
+
+    <title>Deplacement edit</title>
+</head>
+
+<body>
+    {% include('nav.html') %}
+
+    <form action="/conteneur/add" method="post">
+        <h1>Add contenue a conteneur</h1>
+
+        <div class="skip">
+            <label for="conteneur_id">Adresse conteneur</label>
+            <select name="conteneur_id" id="conteneur_id" required>
+                <option value="">Sélectionner une adresse de conteneur</option>
+                {% for dico in conteneurs %}
+                    <option value="{{ dico.conteneur_id }}">{{ dico.adresse_conteneur }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="skip">
+            <label for="type_vetement_id">Type vetement</label>
+            <select name="type_vetement_id" id="type_vetement_id" required>
+                <option value="">Sélectionner un type de vetement</option>
+                {% for dico in type_vetements %}
+                    <option value="{{ dico.type_vetement_id }}">{{ dico.libelle }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <input type="number" name="quantite" id="quantite" required>
+            <label for="quantite">Quantier contenue</label>
+        </div>
+
+        <div class="container-button">
+            <a href="/conteneur/show">Annuler</a>
+            <button type="submit">Valider</button>
+        </div>
+    </form>
+
+    <script src="{{ url_for('static', filename='javaScript/form.js') }}"></script>
+</body>
+
+</html>

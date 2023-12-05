@@ -12,6 +12,12 @@ h1 {
     margin-bottom: 20px;
 }
 
+h1 span {
+    color: red;
+    margin: 0 10px;
+}
+
+
 .container {
     display: flex;
     align-items: center;
