@@ -306,42 +306,6 @@ VALUES
     ('Ceinture', 12.00),
     ('Cravate', 10.00);
 
-
-INSERT INTO 
-    Conteneur_Type_vetement (conteneur_id, type_vetement_id, quantite)
-VALUES
-    (1, 1, 10),
-    (1, 2, 8), 
-    (2, 3, 12),
-    (2, 4, 7), 
-    (3, 5, 15),
-    (3, 6, 11),
-    (4, 7, 18),
-    (4, 8, 9), 
-    (5, 1, 5), 
-    (5, 2, 3),
-    (6, 3, 9),   
-    (6, 4, 5),   
-    (7, 5, 13),  
-    (7, 6, 10),  
-    (8, 7, 16),  
-    (8, 8, 8),   
-    (9, 1, 7),   
-    (9, 2, 4),   
-    (10, 3, 11), 
-    (10, 4, 6),
-    (11, 5, 9), 
-    (11, 6, 7), 
-    (12, 7, 14),
-    (12, 8, 6), 
-    (13, 1, 6),
-    (13, 2, 5),  
-    (14, 3, 10), 
-    (13, 4, 8),  
-    (15, 5, 12), 
-    (15, 6, 9); 
-
-
 INSERT INTO
     possede (client_id, id_type_telephone, numero_telephone)
 VALUES
@@ -455,6 +419,40 @@ VALUES
     ('Avenue de Clichy, Paris', 12.6),
     ('Rue de la Roquette, Paris', 7.8),
     ('Quai de la Tournelle, Paris', 14.0);
+
+INSERT INTO 
+    Conteneur_Type_vetement (conteneur_id, type_vetement_id, quantite)
+VALUES
+    (1, 1, 10),
+    (1, 2, 8), 
+    (2, 3, 12),
+    (2, 4, 7), 
+    (3, 5, 15),
+    (3, 6, 11),
+    (4, 7, 18),
+    (4, 8, 9), 
+    (5, 1, 5), 
+    (5, 2, 3),
+    (6, 3, 9),   
+    (6, 4, 5),   
+    (7, 5, 13),  
+    (7, 6, 10),  
+    (8, 7, 16),  
+    (8, 8, 8),   
+    (9, 1, 7),   
+    (9, 2, 4),   
+    (10, 3, 11), 
+    (10, 4, 6),
+    (11, 5, 9), 
+    (11, 6, 7), 
+    (12, 7, 14),
+    (12, 8, 6), 
+    (13, 1, 6),
+    (13, 2, 5),  
+    (14, 3, 10), 
+    (13, 4, 8),  
+    (15, 5, 12), 
+    (15, 6, 9); 
 
 INSERT INTO
     Camionette (imatriculation_camionette)

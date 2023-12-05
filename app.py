@@ -8,9 +8,9 @@ app.secret_key = "azerty123"
 def get_db():
     if 'db' not in g:
         g.db = pymysql.connect(
-            host="localhost",
-            user="root",
-            password="",
+            host="serveurmysql",
+            user="aimmer",
+            password="1608",
             database="BDD_aimmer",
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
@@ -407,7 +407,8 @@ def deplacement_show():
             FROM Deplacement d
             JOIN Camionette c ON d.imatriculation_camionette = c.imatriculation_camionette
             JOIN recolte r ON d.deplacement_id = r.deplacement_id
-            JOIN Type_vetement tv ON r.type_vetement_id = tv.type_vetement_id '''
+            JOIN Type_vetement tv ON r.type_vetement_id = tv.type_vetement_id
+            ORDER BY d.deplacement_id '''
     cursor.execute(sql)
     deplacements = cursor.fetchall()
     
@@ -546,9 +547,10 @@ def conteneur_show():
     
     cursor = get_db().cursor()
     sql = ''' SELECT c.conteneur_id, c.adresse_conteneur, c.distance_magasin, tv.libelle, tv.type_vetement_id, ctv.quantite 
-            FROM Conteneur_Type_Vetement ctv
+            FROM Conteneur_Type_vetement ctv
             JOIN Conteneur c ON ctv.conteneur_id = c.conteneur_id
-            JOIN Type_vetement tv ON ctv.type_vetement_id = tv.type_vetement_id '''
+            JOIN Type_vetement tv ON ctv.type_vetement_id = tv.type_vetement_id
+            ORDER BY c.conteneur_id, ctv.quantite  '''
     cursor.execute(sql)
     conteneurs = cursor.fetchall()
     
@@ -582,7 +584,7 @@ def conteneur_add_valid():
         
         cursor = get_db().cursor()
         sql_check = '''SELECT * FROM Conteneur_Type_vetement 
-                           WHERE conteneur_id = %s AND type_vetement_id = %s'''
+                    WHERE conteneur_id = %s AND type_vetement_id = %s'''
         cursor.execute(sql_check, (conteneur_id, type_vetement_id))
         conteneur_type_existe = cursor.fetchone()
 
@@ -592,10 +594,12 @@ def conteneur_add_valid():
                             SET quantite = %s 
                             WHERE conteneur_id = %s AND type_vetement_id = %s'''
             cursor.execute(sql_update, (somme_quantitee, conteneur_id, type_vetement_id))
+            get_db().commit()
         else:
             sql_insert = '''INSERT INTO Conteneur_Type_vetement (conteneur_id, type_vetement_id, quantite) 
                             VALUES (%s, %s, %s)'''
             cursor.execute(sql_insert, (conteneur_id, type_vetement_id, quantite))
+            get_db().commit()
         
     return redirect("/conteneur/show")
 
@@ -604,7 +608,7 @@ def conteneur_add_valid():
 def conteneur_edit(id_conteneur, id_type_vetement):
     
     cursor = get_db().cursor()
-    sql = ''' SELECT * FROM Conteneur_Type_Vetement ctv
+    sql = ''' SELECT * FROM Conteneur_Type_vetement ctv
             WHERE ctv.conteneur_id = %s AND ctv.type_vetement_id = %s '''
     cursor.execute(sql, (id_conteneur, id_type_vetement))
     conteneur = cursor.fetchone()
